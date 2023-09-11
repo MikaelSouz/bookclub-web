@@ -1,7 +1,30 @@
 import { Flex, Image } from '@chakra-ui/react'
 import { Text, Link, Input, Button } from 'components'
+import { useNavigate } from 'react-router-dom'
+import * as Yup from 'yup'
+import { useFormik } from 'formik'
 
 export const LoginScreen = () => {
+  const { handleSubmit, handleChange, values, errors } = useFormik({
+    initialValues: {
+      email: '',
+      password: ''
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email('E-mail inválido.')
+        .required('E-mail é obrigatório.'),
+      password: Yup.string().required('Senha é obrigatória.')
+    }),
+    onSubmit: (data) => {
+      console.log({ data })
+    }
+  })
+
+  console.log({ values, errors })
+
+  const navigate = useNavigate()
+
   return (
     <Flex w="100vw" h="100vh" flexDir="row" justifyContent="center">
       <Flex
@@ -23,15 +46,40 @@ export const LoginScreen = () => {
         </Flex>
         <Flex w={['100%', '416px']} flexDir="column">
           <Text.title mb="24px">Login</Text.title>
-          <Input type="email" placeholder="email@example.com" mb="24px"></Input>
-          <Input type="password" placeholder="**********" mb="24px"></Input>
-          <Link mb="24px" textAlign="end">
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="email@example.com"
+            value={values.email}
+            onChange={handleChange}
+            error={errors.email}
+          ></Input>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="**********"
+            value={values.password}
+            onChange={handleChange}
+            error={errors.password}
+            mt="24px"
+          ></Input>
+          <Link
+            mt="24px"
+            textAlign="end"
+            onClick={() => navigate('/forgot-password')}
+          >
             Esqueceu a senha?
           </Link>
-          <Button mb="24px">Entrar</Button>
+          <Button mt="24px" mb="24px" onClick={handleSubmit}>
+            Entrar
+          </Button>
           <Flex justifyContent="center">
-            <Link mr="6px">Não possui uma conta?</Link>
-            <Link fontWeight="bold">Cadastre-se aqui</Link>
+            <Text mr="6px">Não possui uma conta?</Text>
+            <Link fontWeight="bold" onClick={() => navigate('/cadastro')}>
+              Cadastre-se aqui
+            </Link>
           </Flex>
         </Flex>
       </Flex>
@@ -42,8 +90,7 @@ export const LoginScreen = () => {
         bgSize="cover"
         bgPosition="center"
         bgRepeat="no-repeat"
-        borderTopLeftRadius="24px"
-        borderBottomLeftRadius="24px"
+        borderLeftRadius="24px"
       />
     </Flex>
   )

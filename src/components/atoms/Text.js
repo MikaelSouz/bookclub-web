@@ -20,3 +20,11 @@ Text.title = ({ children, ...props }) => {
     </ChakraText>
   )
 }
+
+Text.error = ({ children, ...props }) => {
+  return (
+    <ChakraText fontSize="14px" color="red" fontStyle="italic" {...props}>
+      {children}
+    </ChakraText>
+  )
+}
