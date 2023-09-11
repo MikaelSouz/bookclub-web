@@ -5,7 +5,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
 export const ForgotPasswordScreen = () => {
-  const { handleChange, values, errors } = useFormik({
+  const { handleChange, handleSubmit, values, errors } = useFormik({
     initialValues: {
       email: ''
     },
@@ -14,7 +14,9 @@ export const ForgotPasswordScreen = () => {
         .email('E-mail inválido.')
         .required('E-mail é obrigatório.')
     }),
-    onSubmit: (data) => {}
+    onSubmit: () => {
+      navigate('/reset-password')
+    }
   })
 
   const navigate = useNavigate()
@@ -47,7 +49,7 @@ export const ForgotPasswordScreen = () => {
             error={errors.email}
             onChange={handleChange}
           />
-          <Button onClick={() => navigate('/reset-password')} mt="24px">
+          <Button onClick={handleSubmit} mt="24px">
             Enviar
           </Button>
         </Flex>

@@ -22,9 +22,9 @@ export const RegisterScreen = () => {
       password: Yup.string()
         .min(6, 'Senha deve conter no mínimo 6 caracteres.')
         .required('Senha é obrigatória.'),
-      confirmPassword: Yup.string().required(
-        'Confirmação de senha obrigatória.'
-      )
+      confirmPassword: Yup.string()
+        .required('Confirmação de senha obrigatória.')
+        .oneOf([Yup.ref('password'), null], 'Confirmação de senha inválida.')
     }),
     onSubmit: (data) => {}
   })
@@ -74,6 +74,7 @@ export const RegisterScreen = () => {
             placeholder="Senha"
             values={values.password}
             error={errors.password}
+            onChange={handleChange}
             mt="12px"
           />
           <Input
@@ -83,6 +84,7 @@ export const RegisterScreen = () => {
             placeholder="Confirme a senha"
             values={values.confirmPassword}
             error={errors.confirmPassword}
+            onChange={handleChange}
             mt="12px"
           />
           <Button onClick={handleSubmit} mt="24px" mb="24px">

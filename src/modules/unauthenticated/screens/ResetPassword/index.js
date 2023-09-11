@@ -1,5 +1,6 @@
 import { Flex, Image } from '@chakra-ui/react'
 import { Button, Input, Link, Text } from 'components'
+import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
@@ -12,17 +13,21 @@ export const ResetPasswordScreen = () => {
     },
     validationSchema: Yup.object({
       pin: Yup.string()
-        .length(6, 'Código de verificação deve conter 6 números.')
+        .length(6, 'Código de verificação deve conter 6 caracteres.')
         .required('Código de confirmação obrigatório.'),
       password: Yup.string()
         .min(6, 'Senha deve conter no mínimo 6 caracteres.')
         .required('Senha é obrigatória.'),
-      confirmPassword: Yup.string().required(
-        'Confirmação de senha é obrigatória.'
-      )
+      confirmPassword: Yup.string()
+        .required('Confirmação de senha é obrigatória.')
+        .oneOf([Yup.ref('password'), null], 'Confirmação de senha inválida.')
     }),
-    onSubmit: (data) => {}
+    onSubmit: () => {
+      navigate('/')
+    }
   })
+
+  const navigate = useNavigate()
 
   return (
     <Flex w="100vw" h="100vh">
@@ -45,11 +50,12 @@ export const ResetPasswordScreen = () => {
           <Input
             id="pin"
             name="pin"
-            type="number"
+            type="text"
             placeholder="Ex.: 000000"
             values={values.pin}
             error={errors.pin}
             onChange={handleChange}
+            maxLength={6}
           />
           <Input
             id="password"
