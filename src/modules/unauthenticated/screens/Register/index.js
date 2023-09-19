@@ -1,10 +1,44 @@
-import { Flex, Image } from '@chakra-ui/react'
+import { Flex, Image, useToast } from '@chakra-ui/react'
 import { Button, Input, Link, Text } from 'components'
 import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 
+import { useMutation } from 'react-query'
+import { registerCall } from 'services/api/requests'
+
 export const RegisterScreen = () => {
+  const navigate = useNavigate()
+  const toast = useToast()
+
+  // Request api - Start
+  const mutation = useMutation((newUser) => registerCall(newUser), {
+    onError: (error) => {
+      toast({
+        title: 'Falha ao cadastrar usuário.',
+        description:
+          error?.response?.data?.error || 'Por favor, tente novamente.',
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
+        position: 'top-right'
+      })
+    },
+    onSuccess: () => {
+      toast({
+        title: 'Usuário cadastrado com sucesso.',
+        status: 'success',
+        duration: 6000,
+        isClosable: true,
+        position: 'top-right'
+      })
+      navigate('/')
+    }
+  })
+
+  // Request api - End
+
+  // Validation form - Start
   const { handleChange, handleSubmit, values, errors } = useFormik({
     initialValues: {
       name: '',
@@ -26,15 +60,15 @@ export const RegisterScreen = () => {
         .required('Confirmação de senha obrigatória.')
         .oneOf([Yup.ref('password'), null], 'Confirmação de senha inválida.')
     }),
-    onSubmit: (data) => {}
+    onSubmit: (data) => {
+      mutation.mutate(data)
+    }
   })
 
-  console.log({ values })
-
-  const navigate = useNavigate()
+  // Validation form - End
 
   return (
-    <Flex w="100vw" h="100vh">
+    <Flex w="100vw" h="100vh" flexDir="row" justifyContent="center">
       <Flex
         w={['95%', '95%', '60%', '50%']}
         h="100vh"
@@ -87,7 +121,12 @@ export const RegisterScreen = () => {
             onChange={handleChange}
             mt="12px"
           />
-          <Button onClick={handleSubmit} mt="24px" mb="24px">
+          <Button
+            onClick={handleSubmit}
+            isLoading={mutation.isLoading}
+            mt="24px"
+            mb="24px"
+          >
             Cadastrar
           </Button>
           <Flex alignItems="center" justifyContent="center">

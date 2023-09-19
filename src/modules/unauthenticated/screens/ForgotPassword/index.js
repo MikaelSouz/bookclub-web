@@ -1,10 +1,40 @@
-import { Flex, Image } from '@chakra-ui/react'
+import { Flex, Image, useToast } from '@chakra-ui/react'
 import { Button, Input, Text } from 'components'
 import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
+import { useMutation } from 'react-query'
+import { forgotPasswordCall } from 'services/api/requests'
+
 export const ForgotPasswordScreen = () => {
+  const navigate = useNavigate()
+  const toast = useToast()
+
+  const mutation = useMutation((email) => forgotPasswordCall(email), {
+    onError: (error) => {
+      toast({
+        title: 'Erro ao enviar e-mail.',
+        description: error?.response?.data?.error,
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
+        position: 'top-right'
+      })
+    },
+    onSuccess: (data) => {
+      toast({
+        title: 'E-mail enviado com sucesso.',
+        status: 'success',
+        duration: 6000,
+        isClosable: true,
+        position: 'top-right'
+      })
+      navigate(`/reset-password?email=${values.email}`)
+    }
+  })
+
+  // Validation form - Start
   const { handleChange, handleSubmit, values, errors } = useFormik({
     initialValues: {
       email: ''
@@ -14,15 +44,13 @@ export const ForgotPasswordScreen = () => {
         .email('E-mail inválido.')
         .required('E-mail é obrigatório.')
     }),
-    onSubmit: () => {
-      navigate('/reset-password')
+    onSubmit: (data) => {
+      mutation.mutate(data)
     }
-  })
-
-  const navigate = useNavigate()
+  }) // Validation form - End
 
   return (
-    <Flex w="100vw" h="100vh">
+    <Flex w="100vw" h="100vh" flexDir="row" justifyContent="center">
       <Flex
         w={['95%', '95%', '60%', '50%']}
         h="100vh"
@@ -49,7 +77,11 @@ export const ForgotPasswordScreen = () => {
             error={errors.email}
             onChange={handleChange}
           />
-          <Button onClick={handleSubmit} mt="24px">
+          <Button
+            onClick={handleSubmit}
+            isLoading={mutation.isLoading}
+            mt="24px"
+          >
             Enviar
           </Button>
         </Flex>

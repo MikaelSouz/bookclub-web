@@ -1,10 +1,44 @@
-import { Flex, Image } from '@chakra-ui/react'
+import { Flex, Image, useToast } from '@chakra-ui/react'
 import { Text, Link, Input, Button } from 'components'
 import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 
+import { useMutation } from 'react-query'
+import { loginCall } from 'services/api/requests'
+
+import { saveToken } from 'services/storage'
+
 export const LoginScreen = () => {
+  const navigate = useNavigate()
+  const toast = useToast()
+
+  const mutation = useMutation((loginUser) => loginCall(loginUser), {
+    onError: (error) => {
+      toast({
+        title: 'Falha ao realizar login.',
+        description:
+          error?.response?.data?.error || 'Por favor tente novamente.',
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
+        position: 'top-right'
+      })
+    },
+    onSuccess: (data) => {
+      toast({
+        title: 'Login realizado com sucesso.',
+        status: 'success',
+        duration: 6000,
+        isClosable: true,
+        position: 'top-right'
+      })
+
+      saveToken(data?.data?.token)
+      navigate('/home')
+    }
+  })
+
   const { handleSubmit, handleChange, values, errors } = useFormik({
     initialValues: {
       email: '',
@@ -17,13 +51,9 @@ export const LoginScreen = () => {
       password: Yup.string().required('Senha é obrigatória.')
     }),
     onSubmit: (data) => {
-      console.log({ data })
+      mutation.mutate(data)
     }
   })
-
-  console.log({ values, errors })
-
-  const navigate = useNavigate()
 
   return (
     <Flex w="100vw" h="100vh" flexDir="row" justifyContent="center">
@@ -72,7 +102,12 @@ export const LoginScreen = () => {
           >
             Esqueceu a senha?
           </Link>
-          <Button mt="24px" mb="24px" onClick={handleSubmit}>
+          <Button
+            onClick={handleSubmit}
+            isLoading={mutation.isLoading}
+            mt="24px"
+            mb="24px"
+          >
             Entrar
           </Button>
           <Flex justifyContent="center">

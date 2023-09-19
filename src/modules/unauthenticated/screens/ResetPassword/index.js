@@ -1,18 +1,53 @@
-import { Flex, Image } from '@chakra-ui/react'
+import { Flex, Image, useToast } from '@chakra-ui/react'
 import { Button, Input, Link, Text } from 'components'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
+import { useMutation } from 'react-query'
+import { resetPasswordCall } from 'services/api/requests'
+
 export const ResetPasswordScreen = () => {
+  const navigate = useNavigate()
+  const toast = useToast()
+  const [searchParams] = useSearchParams()
+
+  const mutation = useMutation(
+    (newPassword) => resetPasswordCall(newPassword),
+    {
+      onError: (error) => {
+        toast({
+          title: 'Falha na requisição.',
+          description: error?.response?.data?.error,
+          status: 'error',
+          duration: 6000,
+          isClosable: true,
+          position: 'top-right'
+        })
+      },
+      onSuccess: () => {
+        toast({
+          title: 'Senha alterada com sucesso.',
+          status: 'success',
+          duration: 6000,
+          isClosable: true,
+          position: 'top-right'
+        })
+        navigate('/')
+      }
+    }
+  )
+
+  // Validation Form - Start
   const { handleChange, handleSubmit, values, errors } = useFormik({
     initialValues: {
-      pin: '',
+      email: searchParams.get('email'),
+      token: '',
       password: '',
       confirmPassword: ''
     },
     validationSchema: Yup.object({
-      pin: Yup.string()
+      token: Yup.string()
         .length(6, 'Código de verificação deve conter 6 caracteres.')
         .required('Código de confirmação obrigatório.'),
       password: Yup.string()
@@ -22,15 +57,13 @@ export const ResetPasswordScreen = () => {
         .required('Confirmação de senha é obrigatória.')
         .oneOf([Yup.ref('password'), null], 'Confirmação de senha inválida.')
     }),
-    onSubmit: () => {
-      navigate('/')
+    onSubmit: (data) => {
+      mutation.mutate(data)
     }
-  })
-
-  const navigate = useNavigate()
+  }) // Validation Form - End
 
   return (
-    <Flex w="100vw" h="100vh">
+    <Flex w="100vw" h="100vh" flexDir="row" justifyContent="center">
       <Flex
         w={['95%', '95%', '60%', '50%']}
         h="100vh"
@@ -48,12 +81,12 @@ export const ResetPasswordScreen = () => {
             Digite o código enviado e uma nova senha nos campos abaixo:
           </Text>
           <Input
-            id="pin"
-            name="pin"
+            id="token"
+            name="token"
             type="text"
             placeholder="Ex.: 000000"
-            values={values.pin}
-            error={errors.pin}
+            values={values.token}
+            error={errors.token}
             onChange={handleChange}
             maxLength={6}
           />
@@ -75,9 +108,14 @@ export const ResetPasswordScreen = () => {
             values={values.confirmPassword}
             error={errors.confirmPassword}
             onChange={handleChange}
-            mt="24px"
+            mt="12px"
           />
-          <Button onClick={handleSubmit} mb="24px" mt="24px">
+          <Button
+            onClick={handleSubmit}
+            isLoading={mutation.isLoading}
+            mb="24px"
+            mt="24px"
+          >
             Salvar
           </Button>
           <Flex alignItems="center" justifyContent="center">
