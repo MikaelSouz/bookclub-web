@@ -9,9 +9,14 @@ import { loginCall } from 'services/api/requests'
 
 import { saveToken } from 'services/storage'
 
+import { useDispatch } from 'react-redux'
+import { setAll } from 'services/store/slices/user'
+
 export const LoginScreen = () => {
   const navigate = useNavigate()
   const toast = useToast()
+
+  const dispatch = useDispatch()
 
   const mutation = useMutation((loginUser) => loginCall(loginUser), {
     onError: (error) => {
@@ -35,6 +40,12 @@ export const LoginScreen = () => {
       })
 
       saveToken(data?.data?.token)
+      dispatch(
+        setAll({
+          user: data?.data?.user,
+          token: data?.data?.token
+        })
+      )
       navigate('/home')
     }
   })

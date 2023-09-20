@@ -7,13 +7,18 @@ import { router } from 'router'
 import { queryClient } from 'services/api'
 import { QueryClientProvider } from 'react-query'
 
+import { Provider } from 'react-redux'
+import { store } from 'services/store'
+
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <RouterProvider router={router} />
-      </ChakraProvider>
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider theme={theme}>
+          <RouterProvider router={router} />
+        </ChakraProvider>
+      </QueryClientProvider>
+    </Provider>
   )
 }
 
