@@ -1,2 +1,6 @@
 export * from './Input'
 export * from './Button'
+export * from './SearchBar'
+export * from './MenuItem'
+export * from './BookCard'
+export * from './CategoryCard'
