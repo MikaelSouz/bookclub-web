@@ -12,10 +12,20 @@ export const BookList = () => {
       w="100%"
       flexDir="column"
       paddingX={['12px', '12px', '48px', '112px']}
-      mt="48px"
+      mt={['24px', '48px']}
     >
       <Text.title>Destaques</Text.title>
-      <Flex w="100%" h="100%" flexDir="row">
+      <Flex
+        w="100%"
+        h="100%"
+        flexDir="row"
+        overflowX={['scroll', 'auto']}
+        css={{
+          '::-webkit-scrollbar': {
+            display: 'none'
+          }
+        }}
+      >
         {data?.data.map((item) => (
           <BookCard
             key={`book_${item.id}`}

@@ -66,8 +66,15 @@ export const MenuUser = () => {
             mr="6px"
             bg="brand.primary"
             color="brand.black"
+            w={['42px', '48px']}
+            h={['42px', '48px']}
+            borderStyle="solid"
+            borderWidth="2px"
+            borderColor="brand.primary"
           />
-          <Text.title mr="6px">{userStore?.user?.name}</Text.title>
+          <Flex display={['none', 'none', 'none', 'flex']}>
+            <Text.title mr="6px">{userStore?.user?.name}</Text.title>
+          </Flex>
           <ChevronDownIcon boxSize={8} />
         </Flex>
       </MenuButton>

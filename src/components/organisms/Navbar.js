@@ -10,8 +10,15 @@ export const NavBar = () => {
       mt="24px"
       paddingX={['12px', '12px', '48px', '112px']}
     >
-      <Image src="img/logo.svg" alt="bookclub logo" w="160px" h="48px" />
-      <SearchBar />
+      <Image
+        src="img/logo.svg"
+        alt="bookclub logo"
+        w={['100px', '100px', '120px', '160px']}
+        h="48px"
+      />
+      <Flex display={['none', 'none', 'flex', 'flex']}>
+        <SearchBar />
+      </Flex>
       <MenuUser />
     </Flex>
   )

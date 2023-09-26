@@ -4,7 +4,7 @@ import { SearchIcon } from '@chakra-ui/icons'
 export const SearchBar = () => {
   return (
     <Flex
-      w="478px"
+      w={['250px', '350px', '350px', '478px']}
       h="52px"
       flexDir="row"
       alignItems="center"

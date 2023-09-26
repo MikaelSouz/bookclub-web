@@ -8,16 +8,19 @@ import { queryClient } from 'services/api'
 import { QueryClientProvider } from 'react-query'
 
 import { Provider } from 'react-redux'
-import { store } from 'services/store'
+import { PersistGate } from 'redux-persist/integration/react'
+import { store, persistor } from 'services/store'
 
 function App() {
   return (
     <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={theme}>
-          <RouterProvider router={router} />
-        </ChakraProvider>
-      </QueryClientProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <QueryClientProvider client={queryClient}>
+          <ChakraProvider theme={theme}>
+            <RouterProvider router={router} />
+          </ChakraProvider>
+        </QueryClientProvider>
+      </PersistGate>
     </Provider>
   )
 }

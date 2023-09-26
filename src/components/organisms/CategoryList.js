@@ -10,11 +10,14 @@ export const CategoryList = () => {
   const [selected, setSelected] = useState()
 
   const { data } = useQuery('getCategory', getCategories)
-  const bookQuery = useQuery(['getBookById', selected], () =>
-    getBookByCategory(selected)
+  const bookQuery = useQuery(
+    ['getBookById', selected],
+    () => getBookByCategory(selected),
+    {
+      enabled: !!selected
+    }
   )
 
-  console.log({ bookQuery })
   useEffect(() => {
     if (!selected) {
       setSelected(data?.data[0].id)
@@ -25,12 +28,19 @@ export const CategoryList = () => {
     <Flex
       w="100%"
       flexDir="column"
-      mt="48px"
+      mt={['24px', '48px']}
       paddingX={['12px', '12px', '48px', '112px']}
     >
       <Text.title>Categorias</Text.title>
 
-      <Flex>
+      <Flex
+        overflowX={['scroll', 'auto']}
+        css={{
+          '::-webkit-scrollbar': {
+            display: 'none'
+          }
+        }}
+      >
         {data &&
           data?.data?.map((item) => (
             <CategoryCard
@@ -41,7 +51,15 @@ export const CategoryList = () => {
             />
           ))}
       </Flex>
-      <Flex h="350px">
+      <Flex
+        h="350px"
+        overflowX={['scroll', 'auto']}
+        css={{
+          '::-webkit-scrollbar': {
+            display: 'none'
+          }
+        }}
+      >
         {bookQuery &&
           bookQuery?.data?.data?.map((item) => (
             <BookCard
