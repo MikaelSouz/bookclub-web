@@ -6,12 +6,12 @@ import { Text } from 'components/atoms'
 
 import { getCategories, getBookByCategory } from 'services/api/requests'
 
-export const CategoryList = () => {
-  const [selected, setSelected] = useState()
+export const CategoryList = ({ title, categoryId }) => {
+  const [selected, setSelected] = useState(categoryId)
 
   const { data } = useQuery('getCategory', getCategories)
   const bookQuery = useQuery(
-    ['getBookById', selected],
+    ['getBookByCategory', selected],
     () => getBookByCategory(selected),
     {
       enabled: !!selected
@@ -20,7 +20,7 @@ export const CategoryList = () => {
 
   useEffect(() => {
     if (!selected) {
-      setSelected(data?.data[0].id)
+      setSelected(data?.data[0]?.id)
     }
   }, [data])
 
@@ -31,26 +31,28 @@ export const CategoryList = () => {
       mt={['24px', '48px']}
       paddingX={['12px', '12px', '48px', '112px']}
     >
-      <Text.title>Categorias</Text.title>
+      <Text.title>{title || 'Categorias'}</Text.title>
 
-      <Flex
-        overflowX={['scroll', 'auto']}
-        css={{
-          '::-webkit-scrollbar': {
-            display: 'none'
-          }
-        }}
-      >
-        {data &&
-          data?.data?.map((item) => (
-            <CategoryCard
-              key={`cetegory_${item?.id}`}
-              name={item?.name}
-              selected={selected === item?.id}
-              onClick={() => setSelected(item?.id)}
-            />
-          ))}
-      </Flex>
+      {!categoryId && (
+        <Flex
+          overflowX={['scroll', 'auto']}
+          css={{
+            '::-webkit-scrollbar': {
+              display: 'none'
+            }
+          }}
+        >
+          {data &&
+            data?.data?.map((item) => (
+              <CategoryCard
+                key={`cetegory_${item?.id}`}
+                name={item?.name}
+                selected={selected === item?.id}
+                onClick={() => setSelected(item?.id)}
+              />
+            ))}
+        </Flex>
+      )}
       <Flex
         h="350px"
         overflowX={['scroll', 'auto']}
@@ -67,6 +69,7 @@ export const CategoryList = () => {
               image={item?.cover_url}
               title={item?.name}
               author={item?.author?.name}
+              id={item?.id}
             />
           ))}
       </Flex>

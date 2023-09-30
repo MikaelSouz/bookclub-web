@@ -15,3 +15,10 @@ export const getBookByCategory = (id) =>
       Authorization: `bearer ${restoreToken(userKeyToken)}`
     }
   })
+
+export const getBookById = (id) =>
+  api.get(`/book/${id}`, {
+    headers: {
+      Authorization: `bearer ${restoreToken(userKeyToken)}`
+    }
+  })

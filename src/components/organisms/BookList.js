@@ -32,6 +32,7 @@ export const BookList = () => {
             image={item?.cover_url}
             title={item?.name}
             author={item?.author?.name}
+            id={item?.id}
           />
         ))}
       </Flex>

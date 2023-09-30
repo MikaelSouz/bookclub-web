@@ -25,7 +25,8 @@ module.exports = {
     'react/prop-types': 'off',
     'react/no-unescaped-entities': 'off',
     'multiline-ternary': 'off',
-    'no-unused-vars': 'off'
+    'no-unused-vars': 'off',
+    camelcase: 'off'
   },
   settings: { 'import/resolver': { node: { paths: ['src'] } } }
 }
