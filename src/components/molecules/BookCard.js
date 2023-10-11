@@ -2,7 +2,7 @@ import { Flex } from '@chakra-ui/react'
 import { Text } from 'components/atoms'
 import { useNavigate } from 'react-router-dom'
 
-export const BookCard = ({ image, title, author, id }) => {
+export const BookCard = ({ cover_url, name, author, id }) => {
   const navigate = useNavigate()
 
   return (
@@ -10,15 +10,16 @@ export const BookCard = ({ image, title, author, id }) => {
       flexDir="column"
       alignItems="center"
       justifyContent="center"
-      mr="8px"
+      mr="18px"
       mt="12px"
+      mb="6px"
       cursor="pointer"
       onClick={() => navigate(`/book-detail/${id}`)}
     >
       <Flex
         w={['120px', '120px', '140px', '154px']}
         h={['180px', '180px', '210px', '230px']}
-        bgImage={`url(${image})`}
+        bgImage={`url(${cover_url})`}
         bgPos="center"
         bgSize="cover"
         bgRepeat="no-repeat"
@@ -30,8 +31,9 @@ export const BookCard = ({ image, title, author, id }) => {
         mt="8px"
         fontSize="12px"
         align="center"
+        maxW={['120px', '120px', '140px', '154px']}
       >
-        {title}
+        {name}
       </Text>
       <Text fontSize="10px" mt="4px" align="center">
         {author}

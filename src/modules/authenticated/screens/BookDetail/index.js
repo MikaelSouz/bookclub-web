@@ -20,8 +20,6 @@ export const BookDetailScreen = () => {
     }
   )
 
-  console.log({ data })
-
   const addFavoriteMutation = useMutation(
     (addBook) => addBookToFavorite(addBook),
     {
@@ -29,7 +27,7 @@ export const BookDetailScreen = () => {
         toast({
           title: 'Erro ao adicionar livro aos favoritos.',
           description:
-            error.response?.data?.error || 'Por favor tente novamente.',
+            error?.response?.data?.error || 'Por favor tente novamente.',
           status: 'error',
           duration: 4000,
           isClosable: true,
@@ -92,28 +90,54 @@ export const BookDetailScreen = () => {
     <Flex flexDir="column" w="100vw" alignItems="center">
       <NavBar />
       <Flex
-        w="100%"
-        flexDir="row"
+        w="100vw"
+        flexDir={['column', 'column', 'row', 'row']}
         paddingX={['12px', '12px', '48px', '112px']}
-        mt={['24px', '48px']}
+        mt={['24px', '24px', '48px', '48px']}
+        alignItems={['center', 'center', 'flex-start', 'flex-start']}
       >
         <Flex
-          w="288px"
-          h="358px"
+          w={['200px', '200px', '240px', '288px']}
+          h={['248px', '248px', '298px', '358px']}
           borderRadius="12px"
           bgImage={`url(${data?.data?.book?.cover_url})`}
           bgPosition="center"
           bgSize="cover"
           bgRepeat="no-repeat"
-          mr="24px"
+          mr={['0px', '0px', '24px', '24px']}
         />
-        <Flex flexDir="column" w="70%" mr="24px">
-          <Text.title fontSize="24px">{data?.data?.book?.name}</Text.title>
-          <Text mt="4px" fontSize="16px" color="brand.grayDark">
+        <Flex
+          flexDir="column"
+          w={['90%', '90%', '70%', '70%']}
+          justifyContent={['center', 'center', 'flex-start', 'flex-start']}
+          mr={['0px', '0px', '24px', '24px']}
+        >
+          <Text.title
+            fontSize="24px"
+            textAlign={['center', 'center', 'start', 'start']}
+            mt={['12px', '12px', '0px', '0px']}
+          >
+            {data?.data?.book?.name}
+          </Text.title>
+          <Text
+            mt="4px"
+            fontSize="16px"
+            textAlign={['center', 'center', 'start', 'start']}
+            color="brand.grayDark"
+          >
             {data?.data?.book?.author?.name}
           </Text>
           <Text.title mt="24px">Informações</Text.title>
-          <Flex mt="4px" justifyContent="space-between">
+          <Flex
+            mt="4px"
+            flexDir={['column', 'column', 'row', 'row']}
+            justifyContent={[
+              'center',
+              'center',
+              'space-between',
+              'space-between'
+            ]}
+          >
             <Text fontSize="14px" color="brand.grayDark">
               Categoria: {data?.data?.book?.category?.name}
             </Text>
@@ -130,7 +154,7 @@ export const BookDetailScreen = () => {
             <Text>{data?.data?.book?.synopsis}</Text>
           </Flex>
         </Flex>
-        <Flex>
+        <Flex mt={['24px', '24px', '0px', '0px']}>
           <Button
             onClick={clickButtonFavorite}
             secondary={data?.data?.favorite}

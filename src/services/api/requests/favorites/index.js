@@ -2,6 +2,13 @@ import { api } from 'services/api'
 import { userKeyToken } from 'services/constants'
 import { restoreToken } from 'services/storage'
 
+export const getBookFavorites = () =>
+  api.get('/userbook', {
+    headers: {
+      Authorization: `bearer ${restoreToken(userKeyToken)}`
+    }
+  })
+
 export const addBookToFavorite = (data) =>
   api.post('/userbook', data, {
     headers: {
