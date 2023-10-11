@@ -1,5 +1,12 @@
 import { Flex, Image } from '@chakra-ui/react'
-import { SearchBar, MenuUser, ModalUser } from 'components'
+import {
+  SearchBar,
+  MenuUser,
+  ModalUser,
+  ModalPassword,
+  ModalTerms,
+  ModalPrivacyPolicy
+} from 'components'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -33,6 +40,9 @@ export const NavBar = ({ query, setQuery }) => {
       <MenuUser setShowModal={setShowModal} />
 
       {showModal === 'user' && <ModalUser onClose={onClose} />}
+      {showModal === 'password' && <ModalPassword onClose={onClose} />}
+      {showModal === 'terms' && <ModalTerms onClose={onClose} />}
+      {showModal === 'policy' && <ModalPrivacyPolicy onClose={onClose} />}
     </Flex>
   )
 }

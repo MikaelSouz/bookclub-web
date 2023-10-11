@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { Avatar, Flex, Menu, MenuButton, MenuList } from '@chakra-ui/react'
 import { MenuItem } from 'components/molecules'
@@ -14,10 +14,23 @@ import { HiOutlineDocumentText } from 'react-icons/hi'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Text } from 'components/atoms'
 import { useNavigate } from 'react-router-dom'
+import { setAll } from 'services/store/slices/user'
 
 export const MenuUser = ({ setShowModal }) => {
   const userStore = useSelector((state) => state.user)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const logout = () => {
+    localStorage.clear()
+    dispatch(
+      setAll({
+        token: null,
+        user: null
+      })
+    )
+    navigate('/')
+  }
 
   const listMenu = [
     {
@@ -38,25 +51,29 @@ export const MenuUser = ({ setShowModal }) => {
       id: 2,
       name: 'Alterar Senha',
       icon: BsShieldCheck,
-      divider: true
+      divider: true,
+      onClick: () => setShowModal('password')
     },
     {
       id: 3,
       name: 'Termo de Uso',
       icon: HiOutlineDocumentText,
-      divider: false
+      divider: false,
+      onClick: () => setShowModal('terms')
     },
     {
       id: 4,
       name: 'Política de Privacidade',
       icon: BsClipboard,
-      divider: true
+      divider: true,
+      onClick: () => setShowModal('policy')
     },
     {
       id: 5,
       name: 'Sair',
       icon: TbLogout,
-      divider: false
+      divider: false,
+      onClick: () => logout()
     }
   ]
 
