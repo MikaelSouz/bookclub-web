@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { Flex } from '@chakra-ui/react'
-import { CategoryCard, BookCard } from 'components/molecules'
-import { Text } from 'components/atoms'
+import { CategoryCard } from 'components/molecules'
+import { BookList } from './BookList'
+import { EmptyMessage, Text } from 'components/atoms'
 
 import { getCategories, getBookByCategory } from 'services/api/requests'
 
@@ -10,6 +11,7 @@ export const CategoryList = ({ title, categoryId }) => {
   const [selected, setSelected] = useState(categoryId)
 
   const { data } = useQuery('getCategory', getCategories)
+
   const bookQuery = useQuery(
     ['getBookByCategory', selected],
     () => getBookByCategory(selected),
@@ -23,6 +25,12 @@ export const CategoryList = ({ title, categoryId }) => {
       setSelected(data?.data[0]?.id)
     }
   }, [data])
+
+  useEffect(() => {
+    if (categoryId) {
+      bookQuery.refetch()
+    }
+  }, [categoryId])
 
   return (
     <Flex
@@ -45,7 +53,7 @@ export const CategoryList = ({ title, categoryId }) => {
           {data &&
             data?.data?.map((item) => (
               <CategoryCard
-                key={`cetegory_${item?.id}`}
+                key={`category_${item?.id}`}
                 name={item?.name}
                 selected={selected === item?.id}
                 onClick={() => setSelected(item?.id)}
@@ -54,7 +62,7 @@ export const CategoryList = ({ title, categoryId }) => {
         </Flex>
       )}
       <Flex
-        h="350px"
+        minH="300px"
         overflowX={['scroll', 'auto']}
         css={{
           '::-webkit-scrollbar': {
@@ -62,16 +70,15 @@ export const CategoryList = ({ title, categoryId }) => {
           }
         }}
       >
-        {bookQuery &&
-          bookQuery?.data?.data?.map((item) => (
-            <BookCard
-              key={`bookId_${item?.id}`}
-              image={item?.cover_url}
-              title={item?.name}
-              author={item?.author?.name}
-              id={item?.id}
-            />
-          ))}
+        {bookQuery?.data?.data.length === 0 && (
+          <EmptyMessage>Nenhum livro encontrado</EmptyMessage>
+        )}
+        {bookQuery && (
+          <BookList
+            data={bookQuery?.data?.data}
+            isLoading={bookQuery.isLoading}
+          />
+        )}
       </Flex>
     </Flex>
   )

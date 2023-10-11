@@ -1,20 +1,11 @@
 import { Flex } from '@chakra-ui/react'
-import { Text } from 'components/atoms'
+import { Text, Loader } from 'components/atoms'
 import { BookCard } from 'components/molecules'
-import { useQuery } from 'react-query'
-import { getBookHighlightedCall } from 'services/api/requests'
 
-export const BookList = () => {
-  const { data } = useQuery('getBookHighLighted', getBookHighlightedCall)
-
+export const BookList = ({ title, data, isLoading }) => {
   return (
-    <Flex
-      w="100%"
-      flexDir="column"
-      paddingX={['12px', '12px', '48px', '112px']}
-      mt={['24px', '48px']}
-    >
-      <Text.title>Destaques</Text.title>
+    <Flex w="100%" flexDir="column">
+      <Text.title>{title}</Text.title>
       <Flex
         w="100%"
         h="100%"
@@ -26,13 +17,14 @@ export const BookList = () => {
           }
         }}
       >
-        {data?.data.map((item) => (
+        {isLoading && <Loader />}
+        {data?.map((item) => (
           <BookCard
-            key={`book_${item.id}`}
-            image={item?.cover_url}
-            title={item?.name}
-            author={item?.author?.name}
+            key={`book_${item?.id}`}
             id={item?.id}
+            cover_url={item?.cover_url}
+            name={item?.name}
+            author={item?.author?.name}
           />
         ))}
       </Flex>

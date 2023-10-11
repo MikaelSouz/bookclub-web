@@ -1,7 +1,18 @@
 import { Flex, InputGroup, Input, InputLeftElement } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
-export const SearchBar = () => {
+export const SearchBar = ({ query, setQuery }) => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const checkIfRoutes = () => {
+    if (location.pathname !== '/search') {
+      navigate('/search')
+    }
+  }
+
   return (
     <Flex
       w={['250px', '350px', '350px', '478px']}
@@ -24,6 +35,9 @@ export const SearchBar = () => {
           fontSize="14px"
           fontWeight="500"
           color="brand.grayDark"
+          onFocus={checkIfRoutes}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         ></Input>
       </InputGroup>
     </Flex>
