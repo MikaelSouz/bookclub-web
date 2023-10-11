@@ -13,22 +13,26 @@ import { TbLogout } from 'react-icons/tb'
 import { HiOutlineDocumentText } from 'react-icons/hi'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Text } from 'components/atoms'
+import { useNavigate } from 'react-router-dom'
 
-export const MenuUser = () => {
+export const MenuUser = ({ setShowModal }) => {
   const userStore = useSelector((state) => state.user)
+  const navigate = useNavigate()
 
   const listMenu = [
     {
       id: 0,
       name: 'Favoritos',
       icon: BsBookmark,
-      divider: false
+      divider: false,
+      onClick: () => navigate('/favorites')
     },
     {
       id: 1,
       name: 'Dados Pessoais',
       icon: BsFillPersonFill,
-      divider: false
+      divider: false,
+      onClick: () => setShowModal('user')
     },
     {
       id: 2,
@@ -86,6 +90,7 @@ export const MenuUser = () => {
             text={item.name}
             icon={item.icon}
             divider={item.divider}
+            onClick={item.onClick}
           />
         ))}
       </MenuList>

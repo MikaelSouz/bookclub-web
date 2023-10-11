@@ -1,9 +1,15 @@
 import { Flex, Image } from '@chakra-ui/react'
-import { SearchBar, MenuUser } from 'components'
+import { SearchBar, MenuUser, ModalUser } from 'components'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export const NavBar = () => {
+export const NavBar = ({ query, setQuery }) => {
+  const [showModal, setShowModal] = useState()
   const navigate = useNavigate()
+
+  const onClose = () => {
+    setShowModal()
+  }
 
   return (
     <Flex
@@ -22,9 +28,11 @@ export const NavBar = () => {
         cursor="pointer"
       />
       <Flex display={['none', 'none', 'flex', 'flex']}>
-        <SearchBar />
+        <SearchBar query={query} setQuery={setQuery} />
       </Flex>
-      <MenuUser />
+      <MenuUser setShowModal={setShowModal} />
+
+      {showModal === 'user' && <ModalUser onClose={onClose} />}
     </Flex>
   )
 }
